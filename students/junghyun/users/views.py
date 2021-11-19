@@ -1,24 +1,22 @@
 import json
 import re
-from sre_constants import SUCCESS
 
-from django.shortcuts import render
-from django.http  import JsonResponse
-from django.views import View
+from django.http      import JsonResponse
+from django.views     import View
 
-from .models import User
+from .models          import User
 
-class UsersView(View):
+class SignupView(View):
     def post(self,request):
         try:
             data = json.loads(request.body)
             email               = data["email"]
             password            = data["password"]
-            email_validation = "^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+            email_validation    = "^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
             password_validation = "^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%*^&+=]).*$"
             
             if re.match(email_validation, email) == None or re.match(password_validation, password) == None:
-                return JsonResponse({"MESSAGE" : "ERROR"})
+                return JsonResponse({"MESSAGE" : "VALID_ERROR"})
                 
             User.objects.create(
                 name         = data["name"],
