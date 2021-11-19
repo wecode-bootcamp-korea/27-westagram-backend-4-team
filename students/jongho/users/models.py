@@ -5,7 +5,7 @@ class User(models.Model):
     name       =models.CharField(max_length=100)
     email      =models.EmailField(unique=True)
     password   =models.CharField(max_length=200)
-    phon       =models.IntegerField(max_length=100)
+    phone      =models.CharField(max_length=200)
     information=models.TextField()
     created_at =models.DateTimeField(auto_now_add=True)
     updated_at =models.DateTimeField(auto_now=True)
