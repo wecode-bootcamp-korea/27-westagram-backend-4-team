@@ -1,15 +1,14 @@
-import json
-import re
+import re, json
 
 from django.http      import JsonResponse
 from django.views     import View
 
 from .models          import User
 
-class SignupView(View):
+class SignUpView(View):
     def post(self,request):
         try:
-            data = json.loads(request.body)
+            data                = json.loads(request.body)
             email               = data["email"]
             password            = data["password"]
             email_validation    = "^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
