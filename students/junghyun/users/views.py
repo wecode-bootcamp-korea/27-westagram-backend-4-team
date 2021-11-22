@@ -16,18 +16,21 @@ class SignUpView(View):
             email_validation    = "^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
             password_validation = "^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%*^&+=]).*$"
             
-            if re.match(email_validation, email) == None or re.match(password_validation, password) == None:
-                raise ValidationError("INVALID_ERROR") 
+            if re.match(email_validation, email) == None:
+                raise ValidationError("INVALID_EMAIL")
             
-            if User.objects.filter(email=data['email']).exists():
-                raise ValidationError("INVALID_ERROR") 
+            elif re.match(password_validation, password) == None:
+                raise ValidationError("INVALID_PASSWORD") 
+            
+            elif User.objects.filter(email=data['email']).exists():
+                raise ValidationError("USER_ALREADY_EXISTS") 
             
             User.objects.create(
-                name         = data["name"],
-                email        = data["email"],
+                name          = data["name"],
+                email         = data["email"],
                 phone_number  = data["phone_number"],
-                password     = data["password"],
-                information  = data["info"],
+                password      = data["password"],
+                information   = data.get("info"),
              )
 
             return JsonResponse({"message" : "SUCCESS"}, status=201) 
