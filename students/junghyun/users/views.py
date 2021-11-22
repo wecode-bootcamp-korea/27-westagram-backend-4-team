@@ -1,14 +1,15 @@
 import re, json
 
-from django.core.exceptions import ValidationError
+from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.http            import JsonResponse
 from django.views           import View
 from django.db              import DataError
 
+
 from .models                import User    
 
 class SignUpView(View):
-    def post(self,request):
+    def signuppost(request):
         try:
             data           = json.loads(request.body)
             email          = data["email"]
@@ -43,3 +44,21 @@ class SignUpView(View):
         
         except DataError:
             return JsonResponse({"message":"DATA_ERROR"}, status=401)
+        
+class SignInView(View):
+    def post(self, request):
+        data = json.loads(request.body)
+        try:
+            password = User.objects.get(email = data['email']).password
+            if (password != data['password']):
+                raise ValidationError("INVALID_PASSWORD")
+            return JsonResponse({'message':'SUCCESS'},status = 200)
+        
+        except ValidationError as e:
+            return JsonResponse({'message':e.message}, status = 401)
+        
+        except ObjectDoesNotExist:
+            return JsonResponse({'message':'INVALID_EMAIL'}, status=401)
+        
+        except KeyError:
+            return JsonResponse({'message':'KEY_ERROR'},status = 400)        
