@@ -20,7 +20,7 @@ class SignUp(View):
         return JsonResponse({'message':"INVALID_PASSWORD"},status=400)
 
       if User.objects.filter(email=data["email"]).exists():
-        return JsonResponse({'message':"INVALID_ETGIKEUL"},status=400)
+        return JsonResponse({'message':"INVALID_EGTIKEUL"},status=400)
 
       User.objects.create(
         name         = data["name"],
