@@ -30,5 +30,5 @@ class UserInformaiton(View):
     except KeyError:
       return JsonResponse({'message':"KEYERROR"},status=400)
 
-    
+      
 # Create your views here.
