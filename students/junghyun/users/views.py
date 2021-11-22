@@ -1,6 +1,6 @@
-import json, validator
-from students.junghyun.users.validator import email_exists, pw_validation, regex_match
+import json
 
+from .validator             import *
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.http            import JsonResponse
 from django.views           import View
@@ -14,8 +14,6 @@ class SignUpView(View):
             data           = json.loads(request.body)
             email          = data["email"]
             password	   = data["password"]
-            email_regex    = "^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
-            password_regex = "^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%*^&+=]).*$"
             
             regex_match(email_regex, email)
             regex_match(password_regex, password)

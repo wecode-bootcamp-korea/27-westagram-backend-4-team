@@ -1,16 +1,15 @@
-import re, json
+import re
 
-from django.core.exceptions import ValidationError, ObjectDoesNotExist
-from django.http            import JsonResponse
-from django.views           import View
-from django.db              import DataError
+from django.core.exceptions import ValidationError
 
 from .models                import User  
+
+email_regex    = "^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
+password_regex = "^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%*^&+=]).*$"
 
 def regex_match(regex, value):   
     if not re.match(regex, value):
         raise ValidationError(f"{value} INVALID_USER")
-    
   
 def email_exists(email):
     if User.objects.filter(email).exists():
