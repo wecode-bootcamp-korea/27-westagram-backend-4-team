@@ -6,7 +6,6 @@ from django.http  import JsonResponse
 from .models      import User
 
 class UserInformaiton(View):
-
   def post(self,request):
     try:
       data                   = json.loads(request.body)
@@ -18,11 +17,11 @@ class UserInformaiton(View):
           re.match(password_confirm_regex,data["password"]) and 
           user_unique_confirm.exists()==False):
         User.objects.create(
-          name        = data["name"],
-          email       = data["email"],
-          password    = data["password"],
-          phone       = data["phone"],
-          information = data.get("information","")
+          name         = data["name"],
+          email        = data["email"],
+          password     = data["password"],
+          phone_number = data["phone"],
+          information  = data.get("information","")
         )
         return JsonResponse({'message':"CREATE"},status=201)
 
