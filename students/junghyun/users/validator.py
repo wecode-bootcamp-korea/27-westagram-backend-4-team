@@ -18,4 +18,3 @@ def email_exists(email):
 def pw_validation(password):
     if (password != data['password']):
         raise ValidationError("INVALID_PASSWORD")
-    
