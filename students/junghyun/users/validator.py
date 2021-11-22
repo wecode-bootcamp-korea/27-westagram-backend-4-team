@@ -9,7 +9,7 @@ password_regex = "^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%*^&+=]).*$"
 
 def regex_match(regex, value):   
     if not re.match(regex, value):
-        raise ValidationError(f"{value} INVALID_USER")
+        raise ValidationError(f"{value}_INVALID")
   
 def email_exists(email):
     if User.objects.filter(email).exists():
