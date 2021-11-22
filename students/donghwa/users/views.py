@@ -47,8 +47,8 @@ class SignUpView(View):
 class LoginView(View):
     def post(self, request):
         data     = json.loads(request.body)
-        email    = User.objects.filter(email = 'email')
-        password = User.objects.filter(password = 'password')
+        email    = User.objects.filter(email = data['email'])
+        password = User.objects.filter(password = data['password'])
 
         try:
 
@@ -60,6 +60,3 @@ class LoginView(View):
 
         except KeyError:
             return JsonResponse({"message" : "KEY_ERROR"}, status=400)
-
-        except User.DoesNotExist:
-            return JsonResponse({"message" : "USER_DOESNT_EXIST"}, status=400)
