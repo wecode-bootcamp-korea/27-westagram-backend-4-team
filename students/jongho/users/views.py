@@ -20,7 +20,7 @@ class UserInformaiton(View):
           email       = data["email"],
           password    = data["password"],
           phone       = data["phone"],
-          information = data["information"]
+          information = data.get("information")
         )
         return JsonResponse({'message':"CREATE"},status=201)
 
