@@ -16,10 +16,10 @@ class SignUpView(View):
             email_regex    = "^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
             password_regex = "^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%*^&+=]).*$"
             
-            if re.match(email_validation, email) == None:
+            if re.match(email_regex, email) == None:
                 raise ValidationError("INVALID_EMAIL")
             
-            elif re.match(password_validation, password) == None:
+            elif re.match(password_regex, password) == None:
                 raise ValidationError("INVALID_PASSWORD") 
             
             elif User.objects.filter(email=data['email']).exists():
