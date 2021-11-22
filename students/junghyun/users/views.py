@@ -1,15 +1,15 @@
-import re, json
+import json, validator
+from students.junghyun.users.validator import email_exists, pw_validation, regex_match
 
 from django.core.exceptions import ValidationError, ObjectDoesNotExist
 from django.http            import JsonResponse
 from django.views           import View
 from django.db              import DataError
 
-
 from .models                import User    
 
 class SignUpView(View):
-    def signuppost(request):
+    def post(self, request):
         try:
             data           = json.loads(request.body)
             email          = data["email"]
@@ -17,14 +17,9 @@ class SignUpView(View):
             email_regex    = "^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$"
             password_regex = "^.*(?=^.{8,}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%*^&+=]).*$"
             
-            if not re.match(email_regex, email):
-                raise ValidationError("INVALID_EMAIL")
-            
-            if not re.match(password_regex, password):
-                raise ValidationError("INVALID_PASSWORD") 
-            
-            if User.objects.filter(email).exists():
-                raise ValidationError("USER_ALREADY_EXISTS") 
+            regex_match(email_regex, email)
+            regex_match(password_regex, password)
+            email_exists(email)
             
             User.objects.create(
                 name          = data["name"],
@@ -50,8 +45,7 @@ class SignInView(View):
         data = json.loads(request.body)
         try:
             password = User.objects.get(email = data['email']).password
-            if (password != data['password']):
-                raise ValidationError("INVALID_PASSWORD")
+            pw_validation(password)
             return JsonResponse({'message':'SUCCESS'},status = 200)
         
         except ValidationError as e:
