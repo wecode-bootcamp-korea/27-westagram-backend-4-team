@@ -10,7 +10,7 @@ class UserInformaiton(View):
   def post(self,request):
     try:
       data                   = json.loads(request.body)
-      email_confirm_regex    = '^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]{2,3}+$'
+      email_confirm_regex    = '^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$'
       password_confirm_regex = '^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&+=]).*$'
       user_unique_confirm    = User.objects.filter(email=data["email"])
 
