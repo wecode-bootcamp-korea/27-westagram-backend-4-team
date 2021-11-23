@@ -6,7 +6,7 @@ from django.views           import View
 from django.db              import DataError
 
 from .models                import User 
-from .validator             import *   
+from .validator             import email_regex_match, password_regex_match   
 
 class SignUpView(View):
     def post(self, request):
@@ -19,7 +19,7 @@ class SignUpView(View):
             password_regex_match(password)
             
             if User.objects.filter(email).exists():
-                raise ValidationError("USER_ALREADY_EXISTS")  
+                return JsonResponse({"message":"USER_ALREADY_EXISTS"}, status = 401)
             
             User.objects.create(
                 name          = data["name"],
