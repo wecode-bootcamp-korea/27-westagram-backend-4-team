@@ -43,7 +43,7 @@ class LoginView(View):
         password = User.objects.filter(password = data['password'])
 
         try:
-            if email.exists() and password.exists():
+            if email and password:
                 return JsonResponse({"message" : "SUCCESS"}, status=200)
 
             if not password:
