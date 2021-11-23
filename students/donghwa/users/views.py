@@ -1,7 +1,3 @@
-from django.shortcuts import render
-
-# Create your views here.
-
 import json, re
 
 from django.http     import JsonResponse
@@ -15,7 +11,6 @@ class SignUpView(View):
         try:
             data = json.loads(request.body)
 
-
             regexp_email    = re.compile('^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
             regexp_password = re.compile('^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$')
 
@@ -28,17 +23,15 @@ class SignUpView(View):
             if User.objects.filter(email = data['email']).exists():
                 return JsonResponse({'message' : 'USER_ALREADY_EXISTS'}, status=400)
 
-            if re.match(regexp_email, data['email']) and re.match(regexp_password, data['password']):
+            User.objects.create(
+                name        = data['name'],
+                email       = data['email'],
+                password    = data['password'],
+                contacts    = data['contacts'],
+                address     = data['address']
+                )
 
-                 User.objects.create(
-                     name        = data['name'],
-                     email       = data['email'],
-                     password    = data['password'],
-                     contacts    = data['contacts'],
-                     address     = data['address']
-                 )
-
-                 return JsonResponse({'message' : 'CREATED'}, status=201)
+            return JsonResponse({'message' : 'CREATED'}, status=201)
 
         except KeyError:
             return JsonResponse({'message' : 'KEY_ERROR'}, status=400)
@@ -51,7 +44,6 @@ class LoginView(View):
           password = User.objects.filter(password = data['password'])
 
           try:
-
               if email.exists() and password.exists():
                   return JsonResponse({"message" : "SUCCESS"}, status=200)
 
