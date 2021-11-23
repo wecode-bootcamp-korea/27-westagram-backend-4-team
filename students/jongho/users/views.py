@@ -22,7 +22,7 @@ class SignUpView(View):
       name         = data["name"],
       email        = data["email"],
       password     = data["password"],
-      phone_number = data["phone"],
+      phone_number = data["phone_number"],
       information  = data.get("information","")
     )
       return JsonResponse({'message':"CREATE"},status=201)
