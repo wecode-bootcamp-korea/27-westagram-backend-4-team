@@ -7,13 +7,11 @@ from users.models    import User
 
 class SignUpView(View):
     def post(self, request):
-
-        try:
             data = json.loads(request.body)
-
             regexp_email    = re.compile('^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
             regexp_password = re.compile('^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$')
 
+        try:
             if re.match(regexp_email, data['email']) is None:
                 return JsonResponse({'message' : 'WRONG_EMAIL_FORMAT'}, status=400)
 
@@ -36,7 +34,6 @@ class SignUpView(View):
         except KeyError:
             return JsonResponse({'message' : 'KEY_ERROR'}, status=400)
 
-
 class LoginView(View):
       def post(self, request):
           data     = json.loads(request.body)
@@ -47,8 +44,11 @@ class LoginView(View):
               if email.exists() and password.exists():
                   return JsonResponse({"message" : "SUCCESS"}, status=200)
 
-              else:
+              if not password:
                   return JsonResponse({"message" : "INVALID_USER"}, status=401)
+
+          except User.DoesNotExist:
+              return JsonResponse({"message" : "INVALID_USER"}, status=401)
 
           except KeyError:
               return JsonResponse({"message" : "KEY_ERROR"}, status=400)
