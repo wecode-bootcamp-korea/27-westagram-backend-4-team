@@ -15,8 +15,6 @@ Including another URLconf
 """
 from django.urls import path, include
 
-from users.models import User
-
 urlpatterns = [
     path('user',include('users.urls'))
 ]

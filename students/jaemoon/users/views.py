@@ -11,6 +11,7 @@ class SignupView(View):
             data           = json.loads(request.body)
             email_regex    = r'^[a-zA-Z0-9.-_]+\@[a-zA-Z0-9.-]+\.[a-zA-Z]+$'
             password_regex = r'^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}'
+            
             if re.match(email_regex,data['email']) and re.match(password_regex,data['password']):
                 User.objects.create(
                 name      = data['name'],
