@@ -6,7 +6,7 @@ from django.db    import DataError
 
 from .models      import User
 
-class SignUp(View):
+class SignUpView(View):
   def post(self,request):
     try:
       data                = json.loads(request.body)
@@ -20,7 +20,7 @@ class SignUp(View):
         return JsonResponse({'message':"INVALID_PASSWORD"},status=400)
 
       if User.objects.filter(email=data["email"]).exists():
-        return JsonResponse({'message':"INVALID_EGTIKEUL"},status=400)
+        return JsonResponse({'message':"email_already_exists"},status=400)
 
       User.objects.create(
         name         = data["name"],
