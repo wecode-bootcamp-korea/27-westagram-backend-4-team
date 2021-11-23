@@ -2,11 +2,11 @@ from django.db import models
 
 # Create your models here.
 class User(models.Model):
-    name        = models.CharField(max_length=20)
-    email       = models.CharField(max_lenght=45,unique=True)
-    password    = models.IntegerField(max_lenght=200)
-    call_num    = models.IntegerField(max_lenght=45)
-    address     = models.CharField(max_lenght=50)
+    name        = models.CharField(max_length=45)
+    email       = models.CharField(max_length=100,unique=True)
+    password    = models.CharField(max_length=200)
+    call_num    = models.CharField(max_length=50)
+    address     = models.CharField(max_length=150,blank=True)
     created_at  = models.DateTimeField(auto_now_add=True)
     updated_at  = models.DateTimeField(auto_now=True)
 
