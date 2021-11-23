@@ -44,16 +44,9 @@ class SignInView(View):
     def post(self, request):
         data = json.loads(request.body)
         try:
-            password = User.objects.get(email = data['email']).password
-            if (password != data['password']):
-                raise ValidationError("INVALID_PASSWORD")
+            if not User.objects.filter(email=data['email'], password=data['password']).exists():
+                return JsonResponse({'message': 'INVALID USER'}, status = 401)
             return JsonResponse({'message':'SUCCESS'},status = 200)
         
-        except ValidationError as e:
-            return JsonResponse({'message':e.message}, status = 401)
-        
-        except User.DoesNotExist:
-            return JsonResponse({'message':'INVALID_EMAIL'}, status=401)
-        
         except KeyError:
-            return JsonResponse({'message':'KEY_ERROR'},status = 400)        
+            return JsonResponse({'message':'KEY_ERROR'},status = 400) 
