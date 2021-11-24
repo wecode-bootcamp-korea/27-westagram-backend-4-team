@@ -1,23 +1,19 @@
 import json, re
 
-from django.http     import JsonResponse
-from django.views    import View
+from django.http            import JsonResponse
+from django.views           import View
+from django.core.exceptions import ValidationError
 
-from users.models    import User
+from users.models           import User
+from users.validation       import regexp_email_confirm, regexp_password_confirm
 
 class SignUpView(View):
     def post(self, request):
         try:
             data = json.loads(request.body)
 
-            regexp_email    = re.compile('^[a-zA-Z0-9+-_.]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$')
-            regexp_password = re.compile('^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$')
-
-            if not re.match(regexp_email, data['email']):
-                return JsonResponse({'message' : 'WRONG_EMAIL_FORMAT'}, status=400)
-
-            if not re.match(regexp_password, data['password']):
-                return JsonResponse({'message' : 'WRONG_PASSWORD_FORMAT'}, status=400)
+            regexp_email_confirm(data['email'])
+            regexp_password_confirm(data['password'])
 
             if User.objects.filter(email = data['email']).exists():
                 return JsonResponse({'message' : 'USER_ALREADY_EXISTS'}, status=400)
@@ -32,22 +28,23 @@ class SignUpView(View):
 
             return JsonResponse({'message' : 'CREATED'}, status=201)
 
+        except ValidationError as e:
+            return JsonResponse({'message' : e.message})
+
         except KeyError:
             return JsonResponse({'message' : 'KEY_ERROR'}, status=400)
 
 class LoginView(View):
     def post(self, request):
-        data     = json.loads(request.body)
-
-        email    = User.objects.filter(email = data['email'])
-        password = User.objects.filter(password = data['password'])
-
         try:
-            if email and password:
+            data     = json.loads(request.body)
+
+            email    = User.objects.get(email = data['email'])
+
+            if data['password'] == email.password:
                 return JsonResponse({"message" : "SUCCESS"}, status=200)
 
-            if not password:
-                return JsonResponse({"message" : "INVALID_USER"}, status=401)
+            return JsonResponse({"message" : "INVALID_USER"}, status=401)
 
         except User.DoesNotExist:
             return JsonResponse({"message" : "INVALID_USER"}, status=401)
