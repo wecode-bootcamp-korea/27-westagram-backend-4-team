@@ -1,6 +1,4 @@
-import re
-import json
-import bcrypt
+import re, json, bcrypt
 
 from django.http            import JsonResponse
 from django.views           import View
@@ -14,6 +12,8 @@ class SignUpView(View):
         try:
             data = json.loads(request.body)
 
+            hashed_password = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+
             regexp_email_confirm(data['email'])
             regexp_password_confirm(data['password'])
 
@@ -23,7 +23,7 @@ class SignUpView(View):
             User.objects.create(
                 name        = data['name'],
                 email       = data['email'],
-                password    = bcrypt.hashpw(data['password'].encode('utf-8'), bcrypt.gensalt()).decode('utf-8'),
+                password    = hashed_password,
                 contacts    = data['contacts'],
                 address     = data['address']
             )
