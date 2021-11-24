@@ -35,7 +35,6 @@ class LoginView(View):
         try:
             data = json.loads(request.body)
             user = User.objects.get(email=data['email'])
-            hashed_password =bcrypt.hashpw(data['password'].encode('utf-8'),bcrypt.gensalt())
 
             if bcrypt.checkpw(data["password"].encode('utf-8'),user.password.encode('utf-8')):
                 return JsonResponse({'message':'SUCCESS'},status=200)
