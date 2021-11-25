@@ -11,25 +11,30 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
 from pathlib import Path
-from my_settings import DATABASES, SECRET_KEY
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+import os
+
+SECRET_KEY    = os.environ["SECRET_KEY"]
+ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS",["*"])
+ALGORITHM     = os.environ["ALGORITHM"]
+DEBUG         = True
+
+DATABASES = {
+    'default' : {
+        'ENGINE'  : 'django.db.backends.mysql',
+        'NAME'    : os.environ.get('DB_NAME'),
+        'USER'    : os.environ.get('DB_USER'),
+        'PASSWORD': os.environ.get('DB_PASSWORD'),
+        'HOST'    : os.environ.get('DB_HOST'),
+        'PORT'    : os.environ.get('DB_PORT'),
+		'OPTIONS' : {'charset': 'utf8mb4'}
+    }
+}
+
+
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = SECRET_KEY
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['*']
-
-
 # Application definition
+
 
 INSTALLED_APPS = [
     # 'django.contrib.admin',
