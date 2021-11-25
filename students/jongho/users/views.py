@@ -13,8 +13,8 @@ class SignUpView(View):
     try:
       data = json.loads(request.body)
 
-      email_regex(data)
-      password_regex(data)
+      email_regex(data["email"])
+      password_regex(data["password"])
       
       if User.objects.filter(email=data["email"]).exists():
          return JsonResponse({'message':"email_already_exists"},status=400)
